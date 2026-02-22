@@ -39,14 +39,13 @@ renovate:
   resource_group: renovate
   variables:
     RENOVATE_PLATFORM: gitlab
-    RENOVATE_ENDPOINT: ${CI_API_V4_URL}
-    RENOVATE_TOKEN: ${RENOVATE_TOKEN}
+    RENOVATE_ENDPOINT: ${CI_API_V4_URL}/
     RENOVATE_REPOSITORIES: ${CI_PROJECT_PATH}
     RENOVATE_ONBOARDING: "false"
     RENOVATE_REQUIRE_CONFIG: "required"
     RENOVATE_OPTIMIZE_FOR_DISABLED: "true"
     RENOVATE_REPOSITORY_CACHE: "enabled"
-    LOG_LEVEL: info
+    LOG_LEVEL: debug
   script:
     - renovate $RENOVATE_EXTRA_FLAGS
   rules:
