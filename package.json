@@ -1,6 +1,6 @@
 {
   "name": "openduo",
-  "version": "0.1.0",
+  "version": "1.2.10",
   "description": "GitLab-hardened wrapper for OpenCode",
   "type": "module",
   "license": "MIT",

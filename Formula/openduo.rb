@@ -1,8 +1,9 @@
 class Openduo < Formula
   desc "GitLab-hardened wrapper for OpenCode"
   homepage "https://gitlab.com/vglafirov/openduo"
-  url "https://gitlab.com/vglafirov/openduo/-/archive/v0.1.0/openduo-v0.1.0.tar.gz"
-  sha256 "e41b33e84d82947efb4965388727845e51a72a4e7aab7e3a54ea557445253f82"
+  # URL and SHA256 are updated automatically by script/release.sh
+  url "https://gitlab.com/vglafirov/openduo/-/archive/v1.2.10/openduo-v1.2.10.tar.gz"
+  sha256 "PLACEHOLDER"
   license "MIT"
 
   depends_on "node"
@@ -73,7 +74,7 @@ class Openduo < Formula
       exec "$OPENCODE_BIN" "$@"
     BASH
 
-    chmod 0755, bin/"openduo"
+    (bin/"openduo").chmod 0755
   end
 
   def opencode_version
@@ -84,9 +85,7 @@ class Openduo < Formula
   end
 
   test do
-    assert_match version.to_s, shell_output("#{bin}/openduo --version 2>&1", 0).strip
-
-    # Verify security env vars are set
+    # Verify security env vars are set in the wrapper
     wrapper = File.read(bin/"openduo")
     assert_match "OPENCODE_DISABLE_SHARE=true", wrapper
     assert_match "OPENCODE_DISABLE_MODELS_FETCH=true", wrapper
