@@ -1,19 +1,56 @@
-# You can override the included template(s) by including variable overrides
-# SAST customization: https://docs.gitlab.com/user/application_security/sast/#available-cicd-variables
-# Secret Detection customization: https://docs.gitlab.com/user/application_security/secret_detection/pipeline/configure/
-# Dependency Scanning customization: https://docs.gitlab.com/user/application_security/dependency_scanning/#customizing-analyzer-behavior
-# Container Scanning customization: https://docs.gitlab.com/user/application_security/container_scanning/#customizing-analyzer-behavior
-# Note that environment variables can be set in several places
-# See https://docs.gitlab.com/ci/variables/#cicd-variable-precedence
+# OpenDuo CI/CD Pipeline
+#
+# - Runs security tests on every push
+# - On tags: creates a GitLab release and updates the Homebrew formula SHA
+
 stages:
-- test
-- secret-detection
+  - test
+  - secret-detection
+  - release
+
+# --- Security scanning (from templates) ---
 sast:
   stage: test
 include:
-- template: Security/SAST.gitlab-ci.yml
-- template: Security/Secret-Detection.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
 variables:
-  SECRET_DETECTION_ENABLED: 'true'
+  SECRET_DETECTION_ENABLED: "true"
 secret_detection:
   stage: secret-detection
+
+# --- Unit tests ---
+test:
+  stage: test
+  image: oven/bun:1
+  script:
+    - bun install
+    - bun test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_TAG
+
+# --- Create GitLab release on tags ---
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/
+  script:
+    - echo "Creating release for ${CI_COMMIT_TAG}"
+  release:
+    tag_name: $CI_COMMIT_TAG
+    name: "OpenDuo ${CI_COMMIT_TAG}"
+    description: |
+      ## Installation
+
+      ```bash
+      brew tap vglafirov/openduo https://gitlab.com/vglafirov/openduo.git
+      brew install openduo
+      ```
+
+      ## What's included
+      - OpenCode dependency: see package.json for pinned version
+      - Restricted models catalog (GitLab provider only)
+      - Security hardening: sharing disabled, models locked down

@@ -14,9 +14,24 @@ OpenDuo runs OpenCode with security hardening pre-configured for internal GitLab
 
 ## Installation
 
+### Homebrew (recommended)
+
+```bash
+brew tap vglafirov/openduo https://gitlab.com/vglafirov/openduo.git
+brew install openduo
+```
+
+To upgrade:
+
+```bash
+brew upgrade openduo
+```
+
+### From source
+
 ```bash
 # Clone the repository
-git clone <repo-url>
+git clone https://gitlab.com/vglafirov/openduo.git
 cd openduo
 
 # Install dependencies (includes opencode)
@@ -78,9 +93,10 @@ bun run generate:models
 ```
 openduo/
 ├── bin/openduo              # Shell wrapper (entry point)
+├── Formula/openduo.rb       # Homebrew formula
 ├── models/models.json       # Restricted models catalog (auto-generated)
 ├── script/generate-models.ts # Script to generate models.json from models.dev
 ├── test/security.test.ts    # Security hardening tests
 ├── renovate.json            # Renovate config for auto-updates
-└── package.json             # opencode as dependency
+└── package.json             # opencode-ai as dependency
 ```
