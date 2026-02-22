@@ -2,7 +2,7 @@ class Openduo < Formula
   desc "GitLab-hardened wrapper for OpenCode"
   homepage "https://gitlab.com/vglafirov/openduo"
   url "https://gitlab.com/vglafirov/openduo/-/archive/v0.1.0/openduo-v0.1.0.tar.gz"
-  sha256 "ba6d409ea04dc8b39fdf00e7650d3c9e06da51e2a6f599c3a7d399dc353df02e"
+  sha256 "e41b33e84d82947efb4965388727845e51a72a4e7aab7e3a54ea557445253f82"
   license "MIT"
 
   depends_on "node"
