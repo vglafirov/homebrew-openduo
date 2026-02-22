@@ -6,6 +6,7 @@
 stages:
   - test
   - secret-detection
+  - renovate
   - release
 
 # --- Security scanning (from templates) ---
@@ -30,6 +31,26 @@ test:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_COMMIT_TAG
+
+# --- Renovate: check for dependency updates (runs on schedule) ---
+renovate:
+  stage: renovate
+  image: ghcr.io/renovatebot/renovate:latest
+  resource_group: renovate
+  variables:
+    RENOVATE_PLATFORM: gitlab
+    RENOVATE_ENDPOINT: ${CI_API_V4_URL}
+    RENOVATE_TOKEN: ${RENOVATE_TOKEN}
+    RENOVATE_REPOSITORIES: ${CI_PROJECT_PATH}
+    RENOVATE_ONBOARDING: "false"
+    RENOVATE_REQUIRE_CONFIG: "required"
+    RENOVATE_OPTIMIZE_FOR_DISABLED: "true"
+    RENOVATE_REPOSITORY_CACHE: "enabled"
+    LOG_LEVEL: info
+  script:
+    - renovate $RENOVATE_EXTRA_FLAGS
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
 
 # --- Auto-release: sync version, tag, update formula ---
 # Runs on main when commit message matches Renovate's pattern.
