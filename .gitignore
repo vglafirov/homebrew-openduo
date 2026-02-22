@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+
+# Models catalog is generated — but we commit it so the wrapper works
+# without running the generate script first.
+# !models/models.json

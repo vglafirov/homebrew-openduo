@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# openduo — GitLab-hardened OpenCode wrapper
+#
+# Security hardening applied:
+#   1. Session sharing disabled (OPENCODE_DISABLE_SHARE + config)
+#   2. Models restricted to GitLab-approved providers (OPENCODE_MODELS_PATH)
+#   3. Small model forced to gitlab/duo-chat-haiku-4-5 (config)
+#   4. Model fetching from models.dev disabled (OPENCODE_DISABLE_MODELS_FETCH)
+#   5. Only the "gitlab" provider is enabled (enabled_providers)
+
+set -euo pipefail
+
+# Resolve the real directory of this script (follow symlinks)
+SOURCE="${BASH_SOURCE[0]}"
+while [ -L "$SOURCE" ]; do
+  DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ "$SOURCE" != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# --- Security: Disable sharing completely ---
+export OPENCODE_DISABLE_SHARE=true
+
+# --- Security: Restrict models to approved catalog ---
+export OPENCODE_MODELS_PATH="${ROOT_DIR}/models/models.json"
+
+# --- Security: Don't fetch models from models.dev ---
+export OPENCODE_DISABLE_MODELS_FETCH=true
+
+# --- Security: Disable auto-update (managed by Renovate) ---
+export OPENCODE_DISABLE_AUTOUPDATE=true
+
+# --- Security: Inject hardened config ---
+# OPENCODE_CONFIG_CONTENT has higher precedence than global and project configs.
+# Only the managed config dir (/etc/opencode/) can override this, which is fine.
+SECURITY_CONFIG='{"share":"disabled","small_model":"gitlab/duo-chat-haiku-4-5","enabled_providers":["gitlab"],"autoupdate":false}'
+
+if [ -n "${OPENCODE_CONFIG_CONTENT:-}" ]; then
+  # Merge: user's config as base, security config wins on conflicts
+  # Use a simple bun one-liner for JSON merge (jq may not be installed)
+  MERGED="$(bun -e "
+    const user = JSON.parse(process.env.OPENCODE_CONFIG_CONTENT);
+    const security = ${SECURITY_CONFIG};
+    console.log(JSON.stringify({ ...user, ...security }));
+  ")" 2>/dev/null || MERGED="${SECURITY_CONFIG}"
+  export OPENCODE_CONFIG_CONTENT="${MERGED}"
+else
+  export OPENCODE_CONFIG_CONTENT="${SECURITY_CONFIG}"
+fi
+
+# --- Resolve opencode binary ---
+# The npm package is "opencode-ai" but the binary is still called "opencode"
+OPENCODE_BIN="${ROOT_DIR}/node_modules/.bin/opencode"
+
+if [ ! -x "$OPENCODE_BIN" ]; then
+  echo "error: opencode binary not found at ${OPENCODE_BIN}" >&2
+  echo "       (installed via the 'opencode-ai' npm package)" >&2
+  echo "Run 'bun install' in ${ROOT_DIR} first." >&2
+  exit 1
+fi
+
+# --- Execute opencode, replacing this process ---
+exec "$OPENCODE_BIN" "$@"

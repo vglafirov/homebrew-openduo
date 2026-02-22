@@ -1,0 +1,21 @@
+{
+  "name": "openduo",
+  "version": "0.1.0",
+  "description": "GitLab-hardened wrapper for OpenCode",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "openduo": "./bin/openduo"
+  },
+  "scripts": {
+    "generate:models": "bun run script/generate-models.ts",
+    "test": "bun test",
+    "prepare": "bun run generate:models"
+  },
+  "dependencies": {
+    "opencode-ai": "1.2.10"
+  },
+  "devDependencies": {
+    "@types/bun": "1.3.9"
+  }
+}
