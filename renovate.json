@@ -6,7 +6,7 @@
       "matchPackageNames": ["opencode-ai"],
       "automerge": true,
       "automergeType": "pr",
-      "schedule": ["every weekday"],
+      "schedule": ["at any time"],
       "groupName": "opencode-ai updates",
       "description": "Auto-merge opencode-ai dependency updates when CI passes"
     }
