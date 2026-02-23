@@ -17,7 +17,7 @@ OpenDuo runs OpenCode with security hardening pre-configured for internal GitLab
 ### Homebrew (recommended)
 
 ```bash
-brew tap vglafirov/openduo https://gitlab.com/vglafirov/openduo.git
+brew tap vglafirov/openduo
 brew install openduo
 ```
 
