@@ -73,8 +73,6 @@ auto-release:
     - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"
       changes:
         - bun.lock
-      when: manual
-      allow_failure: true
 
 # --- Create GitLab release on tags ---
 release:
