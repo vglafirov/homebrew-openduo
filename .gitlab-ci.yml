@@ -73,6 +73,8 @@ auto-release:
     - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"
       changes:
         - package.json
+    # Allow manual trigger via pipeline API/UI with FORCE_RELEASE=true
+    - if: $CI_COMMIT_BRANCH == "main" && $FORCE_RELEASE == "true"
 
 # --- Create GitLab release on tags ---
 release:
