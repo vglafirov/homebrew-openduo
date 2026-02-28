@@ -8,8 +8,7 @@
       "automergeType": "pr",
       "schedule": ["at any time"],
       "groupName": "opencode-ai updates",
-      "description": "Auto-merge opencode-ai dependency updates when CI passes",
-      "bumpVersion": "patch"
+      "description": "Auto-merge opencode-ai dependency updates when CI passes"
     }
   ]
 }
