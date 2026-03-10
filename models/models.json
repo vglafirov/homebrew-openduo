@@ -70,7 +70,7 @@
           "cache_write": 0
         },
         "limit": {
-          "context": 200000,
+          "context": 1000000,
           "output": 64000
         }
       },
@@ -265,7 +265,7 @@
           "cache_write": 0
         },
         "limit": {
-          "context": 200000,
+          "context": 1000000,
           "output": 64000
         }
       },
