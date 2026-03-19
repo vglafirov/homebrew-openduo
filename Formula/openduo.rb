@@ -45,22 +45,103 @@ class Openduo < Formula
       # --- Security: Don't fetch models from models.dev ---
       export OPENCODE_DISABLE_MODELS_FETCH=true
 
-      # --- Security: Disable auto-update (managed by brew upgrade) ---
-      export OPENCODE_DISABLE_AUTOUPDATE=true
-
       # --- Security: Inject hardened config ---
-      SECURITY_CONFIG='{"share":"disabled","small_model":"gitlab/duo-chat-haiku-4-5","enabled_providers":["gitlab"],"autoupdate":false}'
+      # GOLDEN_CONFIG is the default baseline (from golden-config.json).
+      # SECURITY_CONFIG contains keys that must always win regardless of user config.
+      # Merge order: golden -> user -> security (security always wins on conflicts).
+      GOLDEN_CONFIG='{
+        "share": "disabled",
+        "server": {
+          "hostname": "127.0.0.1",
+          "mdns": false
+        },
 
-      if [ -n "${OPENCODE_CONFIG_CONTENT:-}" ]; then
-        MERGED="$(node -e "
-          const user = JSON.parse(process.env.OPENCODE_CONFIG_CONTENT);
-          const security = ${SECURITY_CONFIG};
-          console.log(JSON.stringify({ ...user, ...security }));
-        ")" 2>/dev/null || MERGED="${SECURITY_CONFIG}"
-        export OPENCODE_CONFIG_CONTENT="${MERGED}"
-      else
-        export OPENCODE_CONFIG_CONTENT="${SECURITY_CONFIG}"
-      fi
+        "permission": {
+          "*": "ask",
+          "read": {
+            "*": "allow",
+            "*.env": "deny",
+            "*.env.*": "deny",
+            "*.env.example": "allow"
+          },
+          "grep": "allow",
+          "glob": "allow",
+          "list": "allow",
+          "todoread": "allow",
+          "todowrite": "allow",
+          "skill": "allow",
+          "bash": {
+            "*": "ask",
+            "git status*": "allow",
+            "git log*": "allow",
+            "git diff*": "allow",
+            "git show*": "allow",
+            "git branch*": "allow",
+            "grep *": "allow",
+            "cat *": "allow",
+            "head *": "allow",
+            "tail *": "allow",
+            "wc *": "allow",
+            "ls *": "allow",
+            "find *": "allow",
+            "echo *": "allow",
+            "which *": "allow",
+            "pwd": "allow",
+            "date": "allow",
+            "git commit*": "ask",
+            "git commit *": "ask",
+            "git push*": "ask",
+            "git push *": "ask",
+            "rm -rf *": "deny",
+            "curl *": "deny",
+            "wget *": "deny"
+          },
+          "edit": "ask",
+          "webfetch": "ask",
+          "websearch": "ask",
+          "external_directory": "ask",
+          "doom_loop": "ask",
+          "~/.aws/*": "deny",
+          "~/.config/opencode/*": "deny",
+          "~/.gnupg/*": "deny",
+          "~/.netrc": "deny",
+          "~/.ssh/*": "deny"
+        }
+      }'
+      SECURITY_CONFIG='{"share":"disabled","small_model":"gitlab/duo-chat-haiku-4-5","enabled_providers":["gitlab","anthropic","google"]}'
+
+      MERGE_SCRIPT='
+        function deepMerge(base, override) {
+          const result = Object.assign({}, base);
+          for (const key of Object.keys(override)) {
+            if (
+              override[key] !== null &&
+              typeof override[key] === "object" &&
+              !Array.isArray(override[key]) &&
+              base[key] !== null &&
+              typeof base[key] === "object" &&
+              !Array.isArray(base[key])
+            ) {
+              result[key] = deepMerge(base[key], override[key]);
+            } else {
+              result[key] = override[key];
+            }
+          }
+          return result;
+        }
+        const golden = JSON.parse(process.env.GOLDEN_CONFIG);
+        const security = JSON.parse(process.env.SECURITY_CONFIG);
+        const user = process.env.USER_CONFIG ? JSON.parse(process.env.USER_CONFIG) : {};
+        const merged = deepMerge(deepMerge(golden, user), security);
+        console.log(JSON.stringify(merged));
+      '
+
+      GOLDEN_CONFIG="${GOLDEN_CONFIG}" \\
+      SECURITY_CONFIG="${SECURITY_CONFIG}" \\
+      USER_CONFIG="${OPENCODE_CONFIG_CONTENT:-}" \\
+        MERGED="$(node -e "${MERGE_SCRIPT}")" 2>/dev/null || MERGED="${SECURITY_CONFIG}"
+
+      export OPENCODE_CONFIG_CONTENT="${MERGED}"
 
       # --- Resolve opencode binary ---
       OPENCODE_BIN="${ROOT_DIR}/node_modules/.bin/opencode"
@@ -89,10 +170,11 @@ class Openduo < Formula
     wrapper = File.read(bin/"openduo")
     assert_match "OPENCODE_DISABLE_SHARE=true", wrapper
     assert_match "OPENCODE_DISABLE_MODELS_FETCH=true", wrapper
-    assert_match "OPENCODE_DISABLE_AUTOUPDATE=true", wrapper
     assert_match '"share":"disabled"', wrapper
-    assert_match '"enabled_providers":["gitlab"]', wrapper
+    assert_match '"enabled_providers":["gitlab","anthropic","google"]', wrapper
     assert_match '"small_model":"gitlab/duo-chat-haiku-4-5"', wrapper
+    assert_match '"hostname": "127.0.0.1"', wrapper
+    assert_match '"permission"', wrapper
 
     # Verify models.json exists and contains only gitlab
     models = JSON.parse(File.read(libexec/"models/models.json"))
