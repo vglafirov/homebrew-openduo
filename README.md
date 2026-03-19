@@ -4,13 +4,14 @@ GitLab-hardened wrapper for [OpenCode](https://opencode.ai).
 
 OpenDuo runs OpenCode with security hardening pre-configured for internal GitLab use:
 
-| Security Concern                   | Mitigation                                                                          |
-| ---------------------------------- | ----------------------------------------------------------------------------------- |
-| Session sharing to public endpoint | Disabled via `OPENCODE_DISABLE_SHARE=true` and `share: "disabled"` config           |
-| Unapproved model providers         | Only `gitlab` provider enabled via `enabled_providers` and restricted `models.json` |
-| Small model data leak              | Forced to `gitlab/duo-chat-haiku-4-5`                                               |
-| Model catalog fetching             | Disabled via `OPENCODE_DISABLE_MODELS_FETCH=true`                                   |
-| Uncontrolled auto-updates          | Disabled; updates managed via Renovate                                              |
+| Security Concern                   | Mitigation                                                                                          |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Session sharing to public endpoint | Disabled via `OPENCODE_DISABLE_SHARE=true` and `share: "disabled"` config                           |
+| Unapproved model providers         | Only `gitlab`, `anthropic`, and `google` providers enabled via `enabled_providers`                   |
+| Model catalog scope                | Fetched from models.dev at startup, filtered to allowed providers; local gitlab models overlay remote |
+| Small model data leak              | Forced to `gitlab/duo-chat-haiku-4-5`                                                               |
+| Model catalog auto-refresh         | OpenCode's own models.dev fetcher disabled via `OPENCODE_DISABLE_MODELS_FETCH=true`                 |
+| Uncontrolled auto-updates          | Disabled; updates managed via Renovate                                                              |
 
 ## Installation
 
@@ -57,9 +58,10 @@ All OpenCode CLI arguments are passed through transparently.
 
 OpenDuo is a thin shell wrapper (`bin/openduo`) that:
 
-1. Sets security environment variables (`OPENCODE_DISABLE_SHARE`, `OPENCODE_MODELS_PATH`, etc.)
-2. Injects hardened config via `OPENCODE_CONFIG_CONTENT` (high precedence in OpenCode's config system)
-3. Executes the real `opencode` binary from `node_modules`
+1. Fetches the model catalog from `models.dev/api.json`, filters it to allowed providers (`gitlab`, `anthropic`, `google`), and overlays local gitlab models on top. Falls back to the static `models/models.json` if the fetch fails (5s timeout).
+2. Sets security environment variables (`OPENCODE_DISABLE_SHARE`, `OPENCODE_MODELS_PATH`, etc.)
+3. Injects hardened config via `OPENCODE_CONFIG_CONTENT` (high precedence in OpenCode's config system)
+4. Executes the real `opencode` binary from `node_modules`
 
 OpenCode is a regular npm dependency (`opencode-ai` on npm) — Renovate automatically creates MRs when new versions are published.
 
@@ -94,8 +96,8 @@ bun run generate:models
 openduo/
 ├── bin/openduo              # Shell wrapper (entry point)
 ├── Formula/openduo.rb       # Homebrew formula
-├── models/models.json       # Restricted models catalog (auto-generated)
-├── script/generate-models.ts # Script to generate models.json from models.dev
+├── models/models.json       # Local gitlab models catalog (overlaid on models.dev at startup)
+├── script/generate-models.ts # Script to regenerate local gitlab models from models.dev
 ├── test/security.test.ts    # Security hardening tests
 ├── renovate.json            # Renovate config for auto-updates
 └── package.json             # opencode-ai as dependency
