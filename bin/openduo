@@ -51,15 +51,19 @@ MODELS_SCRIPT='
   console.log(JSON.stringify(result));
 '
 
+MODELS_CACHE="${HOME}/.cache/opencode/openduo-models.json"
+mkdir -p "$(dirname "$MODELS_CACHE")"
+
 export ALLOWED_PROVIDERS
 export LOCAL_MODELS="${ROOT_DIR}/models/models.json"
 MODELS_JSON="$(bun -e "${MODELS_SCRIPT}" 2>/dev/null)" || MODELS_JSON=""
 unset ALLOWED_PROVIDERS LOCAL_MODELS
 
 if [ -n "$MODELS_JSON" ]; then
-  MODELS_TMP="$(mktemp "${TMPDIR:-/tmp}/openduo-models.XXXXXX.json")"
-  echo "$MODELS_JSON" > "$MODELS_TMP"
-  export OPENCODE_MODELS_PATH="$MODELS_TMP"
+  echo "$MODELS_JSON" > "$MODELS_CACHE"
+  export OPENCODE_MODELS_PATH="$MODELS_CACHE"
+elif [ -f "$MODELS_CACHE" ]; then
+  export OPENCODE_MODELS_PATH="$MODELS_CACHE"
 else
   export OPENCODE_MODELS_PATH="${ROOT_DIR}/models/models.json"
 fi
