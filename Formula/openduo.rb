@@ -27,10 +27,11 @@ class Openduo < Formula
       #
       # Security hardening applied:
       #   1. Session sharing disabled (OPENCODE_DISABLE_SHARE + config)
-      #   2. Models restricted to GitLab-approved providers (OPENCODE_MODELS_PATH)
-      #   3. Small model forced to gitlab/duo-chat-haiku-4-5 (config)
-      #   4. Model fetching from models.dev disabled (OPENCODE_DISABLE_MODELS_FETCH)
-      #   5. Only the "gitlab" provider is enabled (enabled_providers)
+      #   2. Models fetched from models.dev at startup, filtered to allowed providers only
+      #   3. Local gitlab models overlay remote catalog (openduo-specific model IDs)
+      #   4. Small model forced to gitlab/duo-chat-haiku-4-5 (config)
+      #   5. OpenCode's own models.dev fetcher disabled (OPENCODE_DISABLE_MODELS_FETCH)
+      #   6. Only gitlab, anthropic, google providers are enabled (enabled_providers)
 
       set -euo pipefail
 
@@ -39,11 +40,50 @@ class Openduo < Formula
       # --- Security: Disable sharing completely ---
       export OPENCODE_DISABLE_SHARE=true
 
-      # --- Security: Restrict models to approved catalog ---
-      export OPENCODE_MODELS_PATH="${ROOT_DIR}/models/models.json"
-
-      # --- Security: Don't fetch models from models.dev ---
+      # --- Security: Don't fetch models from models.dev (opencode's own fetcher) ---
       export OPENCODE_DISABLE_MODELS_FETCH=true
+
+      # --- Security: Restrict models to approved providers ---
+      # Fetch models.dev catalog, keep only allowed providers, overlay local gitlab
+      # models (which define openduo-specific model IDs). Falls back to local file.
+      ALLOWED_PROVIDERS='["gitlab","anthropic","google"]'
+      MODELS_SCRIPT='
+        import { readFileSync } from "fs";
+        const allowed = new Set(JSON.parse(process.env.ALLOWED_PROVIDERS));
+        const local = JSON.parse(readFileSync(process.env.LOCAL_MODELS, "utf8"));
+        let remote = {};
+        try {
+          const res = await fetch("https://models.dev/api.json", { signal: AbortSignal.timeout(5000) });
+          if (res.ok) remote = await res.json();
+        } catch {}
+        const result = {};
+        for (const id of allowed) {
+          if (remote[id]) result[id] = remote[id];
+          else if (local[id]) result[id] = local[id];
+        }
+        for (const [id, provider] of Object.entries(local)) {
+          if (!allowed.has(id)) continue;
+          result[id] = result[id] ? { ...result[id], models: { ...(result[id].models ?? {}), ...provider.models } } : provider;
+        }
+        console.log(JSON.stringify(result));
+      '
+
+      MODELS_CACHE="${HOME}/.cache/opencode/openduo-models.json"
+      mkdir -p "$(dirname "$MODELS_CACHE")"
+
+      export ALLOWED_PROVIDERS
+      export LOCAL_MODELS="${ROOT_DIR}/models/models.json"
+      MODELS_JSON="$(node --input-type=module -e "${MODELS_SCRIPT}" 2>/dev/null)" || MODELS_JSON=""
+      unset ALLOWED_PROVIDERS LOCAL_MODELS
+
+      if [ -n "$MODELS_JSON" ]; then
+        echo "$MODELS_JSON" > "$MODELS_CACHE"
+        export OPENCODE_MODELS_PATH="$MODELS_CACHE"
+      elif [ -f "$MODELS_CACHE" ]; then
+        export OPENCODE_MODELS_PATH="$MODELS_CACHE"
+      else
+        export OPENCODE_MODELS_PATH="${ROOT_DIR}/models/models.json"
+      fi
 
       # --- Security: Inject hardened config ---
       # GOLDEN_CONFIG is the default baseline (from golden-config.json).
@@ -171,13 +211,15 @@ class Openduo < Formula
     wrapper = File.read(bin/"openduo")
     assert_match "OPENCODE_DISABLE_SHARE=true", wrapper
     assert_match "OPENCODE_DISABLE_MODELS_FETCH=true", wrapper
+    assert_match "models.dev/api.json", wrapper
+    assert_match "openduo-models.json", wrapper
     assert_match '"share":"disabled"', wrapper
     assert_match '"enabled_providers":["gitlab","anthropic","google"]', wrapper
     assert_match '"small_model":"gitlab/duo-chat-haiku-4-5"', wrapper
     assert_match '"hostname": "127.0.0.1"', wrapper
     assert_match '"permission"', wrapper
 
-    # Verify models.json exists and contains only gitlab
+    # Verify local models.json exists and contains gitlab
     models = JSON.parse(File.read(libexec/"models/models.json"))
     assert_equal ["gitlab"], models.keys
   end
