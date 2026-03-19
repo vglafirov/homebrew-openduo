@@ -136,10 +136,11 @@ class Openduo < Formula
         console.log(JSON.stringify(merged));
       '
 
-      GOLDEN_CONFIG="${GOLDEN_CONFIG}" \\
-      SECURITY_CONFIG="${SECURITY_CONFIG}" \\
-      USER_CONFIG="${OPENCODE_CONFIG_CONTENT:-}" \\
-        MERGED="$(node -e "${MERGE_SCRIPT}")" 2>/dev/null || MERGED="${SECURITY_CONFIG}"
+      export GOLDEN_CONFIG
+      export SECURITY_CONFIG
+      export USER_CONFIG="${OPENCODE_CONFIG_CONTENT:-}"
+      MERGED="$(node -e "${MERGE_SCRIPT}" 2>/dev/null)" || MERGED="${SECURITY_CONFIG}"
+      unset GOLDEN_CONFIG SECURITY_CONFIG USER_CONFIG
 
       export OPENCODE_CONFIG_CONTENT="${MERGED}"
 
