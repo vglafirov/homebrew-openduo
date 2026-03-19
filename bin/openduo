@@ -3,10 +3,11 @@
 #
 # Security hardening applied:
 #   1. Session sharing disabled (OPENCODE_DISABLE_SHARE + config)
-#   2. Models restricted to GitLab-approved providers (OPENCODE_MODELS_PATH)
-#   3. Small model forced to gitlab/duo-chat-haiku-4-5 (config)
-#   4. Model fetching from models.dev disabled (OPENCODE_DISABLE_MODELS_FETCH)
-#   5. Only the "gitlab" provider is enabled (enabled_providers)
+#   2. Models fetched from models.dev at startup, filtered to allowed providers only
+#   3. Local gitlab models overlay remote catalog (openduo-specific model IDs)
+#   4. Small model forced to gitlab/duo-chat-haiku-4-5 (config)
+#   5. OpenCode's own models.dev fetcher disabled (OPENCODE_DISABLE_MODELS_FETCH)
+#   6. Only gitlab, anthropic, google providers are enabled (enabled_providers)
 
 set -euo pipefail
 
@@ -23,11 +24,45 @@ ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 # --- Security: Disable sharing completely ---
 export OPENCODE_DISABLE_SHARE=true
 
-# --- Security: Restrict models to approved catalog ---
-export OPENCODE_MODELS_PATH="${ROOT_DIR}/models/models.json"
-
-# --- Security: Don't fetch models from models.dev ---
+# --- Security: Don't fetch models from models.dev (opencode's own fetcher) ---
 export OPENCODE_DISABLE_MODELS_FETCH=true
+
+# --- Security: Restrict models to approved providers ---
+# Fetch models.dev catalog, keep only allowed providers, overlay local gitlab
+# models (which define openduo-specific model IDs). Falls back to local file.
+ALLOWED_PROVIDERS='["gitlab","anthropic","google"]'
+MODELS_SCRIPT='
+  const allowed = new Set(JSON.parse(process.env.ALLOWED_PROVIDERS));
+  const local = JSON.parse(await Bun.file(process.env.LOCAL_MODELS).text());
+  let remote = {};
+  try {
+    const res = await fetch("https://models.dev/api.json", { signal: AbortSignal.timeout(5000) });
+    if (res.ok) remote = await res.json();
+  } catch {}
+  const result = {};
+  for (const id of allowed) {
+    if (remote[id]) result[id] = remote[id];
+    else if (local[id]) result[id] = local[id];
+  }
+  for (const [id, provider] of Object.entries(local)) {
+    if (!allowed.has(id)) continue;
+    result[id] = result[id] ? { ...result[id], models: { ...(result[id].models ?? {}), ...provider.models } } : provider;
+  }
+  console.log(JSON.stringify(result));
+'
+
+export ALLOWED_PROVIDERS
+export LOCAL_MODELS="${ROOT_DIR}/models/models.json"
+MODELS_JSON="$(bun -e "${MODELS_SCRIPT}" 2>/dev/null)" || MODELS_JSON=""
+unset ALLOWED_PROVIDERS LOCAL_MODELS
+
+if [ -n "$MODELS_JSON" ]; then
+  MODELS_TMP="$(mktemp "${TMPDIR:-/tmp}/openduo-models.XXXXXX.json")"
+  echo "$MODELS_JSON" > "$MODELS_TMP"
+  export OPENCODE_MODELS_PATH="$MODELS_TMP"
+else
+  export OPENCODE_MODELS_PATH="${ROOT_DIR}/models/models.json"
+fi
 
 # --- Security: Inject hardened config ---
 # OPENCODE_CONFIG_CONTENT has higher precedence than global and project configs.
