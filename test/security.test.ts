@@ -67,7 +67,7 @@ describe("openduo security hardening", () => {
       exec() { echo "$OPENCODE_CONFIG_CONTENT"; }
       export -f exec 2>/dev/null || true
       export OPENCODE_CONFIG_CONTENT=""
-      SECURITY_CONFIG='{"share":"disabled","small_model":"gitlab/duo-chat-haiku-4-5","enabled_providers":["gitlab","anthropic","google"]}'
+      SECURITY_CONFIG='{"share":"disabled","small_model":"gitlab/duo-chat-gpt-5-4-nano","enabled_providers":["gitlab","anthropic","google"]}'
       export OPENCODE_CONFIG_CONTENT="\${SECURITY_CONFIG}"
       echo "$OPENCODE_CONFIG_CONTENT"
     `;
@@ -75,7 +75,7 @@ describe("openduo security hardening", () => {
     const config = JSON.parse(result.trim());
 
     expect(config.share).toBe("disabled");
-    expect(config.small_model).toBe("gitlab/duo-chat-haiku-4-5");
+    expect(config.small_model).toBe("gitlab/duo-chat-gpt-5-4-nano");
     expect(config.enabled_providers).toEqual(["gitlab", "anthropic", "google"]);
   });
 
@@ -163,7 +163,7 @@ describe("openduo security hardening", () => {
     });
     const securityConfig = JSON.stringify({
       share: "disabled",
-      small_model: "gitlab/duo-chat-haiku-4-5",
+      small_model: "gitlab/duo-chat-gpt-5-4-nano",
       enabled_providers: ["gitlab", "anthropic", "google"],
     });
 
@@ -180,7 +180,7 @@ describe("openduo security hardening", () => {
 
     // Security fields
     expect(config.share).toBe("disabled");
-    expect(config.small_model).toBe("gitlab/duo-chat-haiku-4-5");
+    expect(config.small_model).toBe("gitlab/duo-chat-gpt-5-4-nano");
     expect(config.enabled_providers).toEqual(["gitlab", "anthropic", "google"]);
 
     // Server defaults
@@ -207,7 +207,7 @@ describe("openduo security hardening", () => {
 
     const result = await $`bash -c ${`
       export OPENCODE_CONFIG_CONTENT='${malicious}'
-      SECURITY_CONFIG='{"share":"disabled","small_model":"gitlab/duo-chat-haiku-4-5","enabled_providers":["gitlab","anthropic","google"]}'
+      SECURITY_CONFIG='{"share":"disabled","small_model":"gitlab/duo-chat-gpt-5-4-nano","enabled_providers":["gitlab","anthropic","google"]}'
       MERGED=$(bun -e "
         const user = JSON.parse(process.env.OPENCODE_CONFIG_CONTENT);
         const security = $SECURITY_CONFIG;
@@ -221,7 +221,7 @@ describe("openduo security hardening", () => {
 
     // Security settings must win
     expect(config.share).toBe("disabled");
-    expect(config.small_model).toBe("gitlab/duo-chat-haiku-4-5");
+    expect(config.small_model).toBe("gitlab/duo-chat-gpt-5-4-nano");
     expect(config.enabled_providers).toEqual(["gitlab", "anthropic", "google"]);
   });
 
@@ -258,7 +258,7 @@ describe("openduo security hardening", () => {
     });
     const securityConfig = JSON.stringify({
       share: "disabled",
-      small_model: "gitlab/duo-chat-haiku-4-5",
+      small_model: "gitlab/duo-chat-gpt-5-4-nano",
       enabled_providers: ["gitlab", "anthropic", "google"],
     });
     const userConfig = JSON.stringify({

@@ -9,7 +9,7 @@ OpenDuo runs OpenCode with security hardening pre-configured for internal GitLab
 | Session sharing to public endpoint | Disabled via `OPENCODE_DISABLE_SHARE=true` and `share: "disabled"` config                           |
 | Unapproved model providers         | Only `gitlab`, `anthropic`, and `google` providers enabled via `enabled_providers`                   |
 | Model catalog scope                | Fetched from models.dev at startup, filtered to allowed providers; local gitlab models overlay remote |
-| Small model data leak              | Forced to `gitlab/duo-chat-haiku-4-5`                                                               |
+| Small model data leak              | Forced to `gitlab/duo-chat-gpt-5-4-nano`                                                           |
 | Model catalog auto-refresh         | OpenCode's own models.dev fetcher disabled via `OPENCODE_DISABLE_MODELS_FETCH=true`                 |
 | Uncontrolled auto-updates          | Disabled; updates managed via Renovate                                                              |
 

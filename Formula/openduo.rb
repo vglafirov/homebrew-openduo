@@ -29,7 +29,7 @@ class Openduo < Formula
       #   1. Session sharing disabled (OPENCODE_DISABLE_SHARE + config)
       #   2. Models fetched from models.dev at startup, filtered to allowed providers only
       #   3. Local gitlab models overlay remote catalog (openduo-specific model IDs)
-      #   4. Small model forced to gitlab/duo-chat-haiku-4-5 (config)
+      #   4. Small model forced to gitlab/duo-chat-gpt-5-4-nano (config)
       #   5. OpenCode's own models.dev fetcher disabled (OPENCODE_DISABLE_MODELS_FETCH)
       #   6. Only gitlab, anthropic, google providers are enabled (enabled_providers)
 
@@ -148,7 +148,7 @@ class Openduo < Formula
           "~/.ssh/*": "deny"
         }
       }'
-      SECURITY_CONFIG='{"share":"disabled","small_model":"gitlab/duo-chat-haiku-4-5","enabled_providers":["gitlab","anthropic","google"]}'
+      SECURITY_CONFIG='{"share":"disabled","small_model":"gitlab/duo-chat-gpt-5-4-nano","enabled_providers":["gitlab","anthropic","google"]}'
 
       MERGE_SCRIPT='
         function deepMerge(base, override) {
@@ -215,7 +215,7 @@ class Openduo < Formula
     assert_match "openduo-models.json", wrapper
     assert_match '"share":"disabled"', wrapper
     assert_match '"enabled_providers":["gitlab","anthropic","google"]', wrapper
-    assert_match '"small_model":"gitlab/duo-chat-haiku-4-5"', wrapper
+    assert_match '"small_model":"gitlab/duo-chat-gpt-5-4-nano"', wrapper
     assert_match '"hostname": "127.0.0.1"', wrapper
     assert_match '"permission"', wrapper
 
