@@ -4,7 +4,7 @@
     "env": [
       "GITLAB_TOKEN"
     ],
-    "npm": "@gitlab/gitlab-ai-provider",
+    "npm": "gitlab-ai-provider",
     "name": "GitLab Duo",
     "doc": "https://docs.gitlab.com/user/duo_agent_platform/",
     "models": {
@@ -90,6 +90,39 @@
           "input": [
             "text",
             "image"
+          ],
+          "output": [
+            "text"
+          ]
+        },
+        "open_weights": false,
+        "cost": {
+          "input": 0,
+          "output": 0
+        },
+        "limit": {
+          "context": 400000,
+          "input": 272000,
+          "output": 128000
+        }
+      },
+      "duo-chat-gpt-5-3-codex": {
+        "id": "duo-chat-gpt-5-3-codex",
+        "name": "Agentic Chat (GPT-5.3 Codex)",
+        "family": "gpt-codex",
+        "attachment": true,
+        "reasoning": true,
+        "tool_call": true,
+        "structured_output": true,
+        "temperature": false,
+        "knowledge": "2025-08-31",
+        "release_date": "2026-02-05",
+        "last_updated": "2026-02-05",
+        "modalities": {
+          "input": [
+            "text",
+            "image",
+            "pdf"
           ],
           "output": [
             "text"
@@ -204,6 +237,38 @@
           "output": 128000
         }
       },
+      "duo-chat-gpt-5-4-nano": {
+        "id": "duo-chat-gpt-5-4-nano",
+        "name": "Agentic Chat (GPT-5.4 Nano)",
+        "family": "gpt-nano",
+        "attachment": true,
+        "reasoning": true,
+        "tool_call": true,
+        "structured_output": true,
+        "temperature": false,
+        "knowledge": "2025-08-31",
+        "release_date": "2026-03-17",
+        "last_updated": "2026-03-17",
+        "modalities": {
+          "input": [
+            "text",
+            "image"
+          ],
+          "output": [
+            "text"
+          ]
+        },
+        "open_weights": false,
+        "cost": {
+          "input": 0,
+          "output": 0
+        },
+        "limit": {
+          "context": 400000,
+          "input": 272000,
+          "output": 128000
+        }
+      },
       "duo-chat-gpt-5-2": {
         "id": "duo-chat-gpt-5-2",
         "name": "Agentic Chat (GPT-5.2)",
@@ -216,6 +281,38 @@
         "knowledge": "2025-08-31",
         "release_date": "2026-01-23",
         "last_updated": "2026-01-23",
+        "modalities": {
+          "input": [
+            "text",
+            "image"
+          ],
+          "output": [
+            "text"
+          ]
+        },
+        "open_weights": false,
+        "cost": {
+          "input": 0,
+          "output": 0
+        },
+        "limit": {
+          "context": 400000,
+          "input": 272000,
+          "output": 128000
+        }
+      },
+      "duo-chat-gpt-5-4-mini": {
+        "id": "duo-chat-gpt-5-4-mini",
+        "name": "Agentic Chat (GPT-5.4 Mini)",
+        "family": "gpt-mini",
+        "attachment": true,
+        "reasoning": true,
+        "tool_call": true,
+        "structured_output": true,
+        "temperature": false,
+        "knowledge": "2025-08-31",
+        "release_date": "2026-03-17",
+        "last_updated": "2026-03-17",
         "modalities": {
           "input": [
             "text",
@@ -267,6 +364,39 @@
         "limit": {
           "context": 1000000,
           "output": 64000
+        }
+      },
+      "duo-chat-gpt-5-4": {
+        "id": "duo-chat-gpt-5-4",
+        "name": "Agentic Chat (GPT-5.4)",
+        "family": "gpt",
+        "attachment": true,
+        "reasoning": true,
+        "tool_call": true,
+        "structured_output": true,
+        "temperature": false,
+        "knowledge": "2025-08-31",
+        "release_date": "2026-03-05",
+        "last_updated": "2026-03-05",
+        "modalities": {
+          "input": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "output": [
+            "text"
+          ]
+        },
+        "open_weights": false,
+        "cost": {
+          "input": 0,
+          "output": 0
+        },
+        "limit": {
+          "context": 1050000,
+          "input": 922000,
+          "output": 128000
         }
       },
       "duo-chat-opus-4-5": {
