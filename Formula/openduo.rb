@@ -184,6 +184,12 @@ class Openduo < Formula
 
       export OPENCODE_CONFIG_CONTENT="${MERGED}"
 
+      # --- Subcommand: openduo injected-config ---
+      if [ "${1:-}" = "show-injected-config" ]; then
+        echo "$OPENCODE_CONFIG_CONTENT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>console.log(JSON.stringify(JSON.parse(d),null,2)))"
+        exit 0
+      fi
+
       # --- Resolve opencode binary ---
       OPENCODE_BIN="${ROOT_DIR}/node_modules/.bin/opencode"
 

@@ -225,6 +225,24 @@ describe("openduo security hardening", () => {
     expect(config.enabled_providers).toEqual(["gitlab", "anthropic", "google"]);
   });
 
+  test("openduo show-injected-config subcommand outputs pretty-printed merged OPENCODE_CONFIG_CONTENT", async () => {
+    const result = await $`${WRAPPER} show-injected-config`.text().catch(() => "");
+    const config = JSON.parse(result.trim());
+
+    expect(config.share).toBe("disabled");
+    expect(config.small_model).toBe("gitlab/duo-chat-haiku-4-5");
+    expect(config.enabled_providers).toEqual(["gitlab", "anthropic", "google"]);
+    expect(config.server.hostname).toBe("127.0.0.1");
+    expect(config.permission).toBeDefined();
+    expect(config.permission["*"]).toBe("ask");
+
+    const pretty = result.trim();
+
+    expect(pretty).toContain("\n");
+    expect(pretty.startsWith("{")).toBe(true);
+    expect(pretty.endsWith("}")).toBe(true);
+  });
+
   test("user config is deep-merged with golden defaults", async () => {
     const mergeScript = `
       function deepMerge(base, override) {
