@@ -52,6 +52,11 @@ export PATH="$(pwd)/bin:$PATH"
 openduo
 ```
 
+```bash
+# Shows the hardened config openduo is injecting via OPENCODE_CONFIG_CONTENT for debugging purposes
+openduo show-injected-config
+```
+
 All OpenCode CLI arguments are passed through transparently.
 
 ## How It Works
@@ -102,3 +107,8 @@ openduo/
 ├── renovate.json            # Renovate config for auto-updates
 └── package.json             # opencode-ai as dependency
 ```
+
+## Mirroring
+
+Contribute on [Gitlab](https://gitlab.com/vglafirov/openduo)
+Mirrored to [Github](https://github.com/vglafirov/homebrew-openduo)

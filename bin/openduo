@@ -170,6 +170,12 @@ unset GOLDEN_CONFIG SECURITY_CONFIG USER_CONFIG
 
 export OPENCODE_CONFIG_CONTENT="${MERGED}"
 
+# --- Subcommand: openduo injected-config ---
+if [ "${1:-}" = "show-injected-config" ]; then
+  echo "$OPENCODE_CONFIG_CONTENT" | bun -e "process.stdout.write(JSON.stringify(JSON.parse(await Bun.stdin.text()), null, 2) + '\n')"
+  exit 0
+fi
+
 # --- Resolve opencode binary ---
 # The npm package is "opencode-ai" but the binary is still called "opencode"
 OPENCODE_BIN="${ROOT_DIR}/node_modules/.bin/opencode"
