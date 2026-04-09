@@ -8,18 +8,18 @@
     "name": "GitLab Duo",
     "doc": "https://docs.gitlab.com/user/duo_agent_platform/",
     "models": {
-      "duo-chat-gpt-5-4-nano": {
-        "id": "duo-chat-gpt-5-4-nano",
-        "name": "Agentic Chat (GPT-5.4 Nano)",
-        "family": "gpt-nano",
+      "duo-chat-gpt-5-1": {
+        "id": "duo-chat-gpt-5-1",
+        "name": "Agentic Chat (GPT-5.1)",
+        "family": "gpt",
         "attachment": true,
         "reasoning": true,
         "tool_call": true,
         "structured_output": true,
         "temperature": false,
-        "knowledge": "2025-08-31",
-        "release_date": "2026-03-17",
-        "last_updated": "2026-03-17",
+        "knowledge": "2024-09-30",
+        "release_date": "2026-01-22",
+        "last_updated": "2026-01-22",
         "modalities": {
           "input": [
             "text",
@@ -40,18 +40,18 @@
           "output": 128000
         }
       },
-      "duo-chat-gpt-5-mini": {
-        "id": "duo-chat-gpt-5-mini",
-        "name": "Agentic Chat (GPT-5 Mini)",
-        "family": "gpt-mini",
+      "duo-chat-gpt-5-2": {
+        "id": "duo-chat-gpt-5-2",
+        "name": "Agentic Chat (GPT-5.2)",
+        "family": "gpt",
         "attachment": true,
         "reasoning": true,
         "tool_call": true,
         "structured_output": true,
         "temperature": false,
-        "knowledge": "2024-05-30",
-        "release_date": "2026-01-22",
-        "last_updated": "2026-01-22",
+        "knowledge": "2025-08-31",
+        "release_date": "2026-01-23",
+        "last_updated": "2026-01-23",
         "modalities": {
           "input": [
             "text",
@@ -105,22 +105,22 @@
           "output": 64000
         }
       },
-      "duo-chat-gpt-5-2": {
-        "id": "duo-chat-gpt-5-2",
-        "name": "Agentic Chat (GPT-5.2)",
-        "family": "gpt",
+      "duo-chat-opus-4-6": {
+        "id": "duo-chat-opus-4-6",
+        "name": "Agentic Chat (Claude Opus 4.6)",
+        "family": "claude-opus",
         "attachment": true,
         "reasoning": true,
         "tool_call": true,
-        "structured_output": true,
-        "temperature": false,
-        "knowledge": "2025-08-31",
-        "release_date": "2026-01-23",
-        "last_updated": "2026-01-23",
+        "temperature": true,
+        "knowledge": "2025-03-31",
+        "release_date": "2026-02-05",
+        "last_updated": "2026-02-05",
         "modalities": {
           "input": [
             "text",
-            "image"
+            "image",
+            "pdf"
           ],
           "output": [
             "text"
@@ -129,12 +129,46 @@
         "open_weights": false,
         "cost": {
           "input": 0,
-          "output": 0
+          "output": 0,
+          "cache_read": 0,
+          "cache_write": 0
         },
         "limit": {
-          "context": 400000,
-          "input": 272000,
-          "output": 128000
+          "context": 1000000,
+          "output": 64000
+        }
+      },
+      "duo-chat-haiku-4-5": {
+        "id": "duo-chat-haiku-4-5",
+        "name": "Agentic Chat (Claude Haiku 4.5)",
+        "family": "claude-haiku",
+        "attachment": true,
+        "reasoning": true,
+        "tool_call": true,
+        "temperature": true,
+        "knowledge": "2025-02-28",
+        "release_date": "2026-01-08",
+        "last_updated": "2026-01-08",
+        "modalities": {
+          "input": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "output": [
+            "text"
+          ]
+        },
+        "open_weights": false,
+        "cost": {
+          "input": 0,
+          "output": 0,
+          "cache_read": 0,
+          "cache_write": 0
+        },
+        "limit": {
+          "context": 200000,
+          "output": 64000
         }
       },
       "duo-chat-gpt-5-codex": {
@@ -169,16 +203,16 @@
           "output": 128000
         }
       },
-      "duo-chat-gpt-5-1": {
-        "id": "duo-chat-gpt-5-1",
-        "name": "Agentic Chat (GPT-5.1)",
-        "family": "gpt",
+      "duo-chat-gpt-5-mini": {
+        "id": "duo-chat-gpt-5-mini",
+        "name": "Agentic Chat (GPT-5 Mini)",
+        "family": "gpt-mini",
         "attachment": true,
         "reasoning": true,
         "tool_call": true,
         "structured_output": true,
         "temperature": false,
-        "knowledge": "2024-09-30",
+        "knowledge": "2024-05-30",
         "release_date": "2026-01-22",
         "last_updated": "2026-01-22",
         "modalities": {
@@ -234,56 +268,22 @@
           "output": 128000
         }
       },
-      "duo-chat-sonnet-4-5": {
-        "id": "duo-chat-sonnet-4-5",
-        "name": "Agentic Chat (Claude Sonnet 4.5)",
-        "family": "claude-sonnet",
-        "attachment": true,
-        "reasoning": true,
-        "tool_call": true,
-        "temperature": true,
-        "knowledge": "2025-07-31",
-        "release_date": "2026-01-08",
-        "last_updated": "2026-01-08",
-        "modalities": {
-          "input": [
-            "text",
-            "image",
-            "pdf"
-          ],
-          "output": [
-            "text"
-          ]
-        },
-        "open_weights": false,
-        "cost": {
-          "input": 0,
-          "output": 0,
-          "cache_read": 0,
-          "cache_write": 0
-        },
-        "limit": {
-          "context": 200000,
-          "output": 64000
-        }
-      },
-      "duo-chat-gpt-5-4": {
-        "id": "duo-chat-gpt-5-4",
-        "name": "Agentic Chat (GPT-5.4)",
-        "family": "gpt",
+      "duo-chat-gpt-5-4-mini": {
+        "id": "duo-chat-gpt-5-4-mini",
+        "name": "Agentic Chat (GPT-5.4 Mini)",
+        "family": "gpt-mini",
         "attachment": true,
         "reasoning": true,
         "tool_call": true,
         "structured_output": true,
         "temperature": false,
         "knowledge": "2025-08-31",
-        "release_date": "2026-03-05",
-        "last_updated": "2026-03-05",
+        "release_date": "2026-03-17",
+        "last_updated": "2026-03-17",
         "modalities": {
           "input": [
             "text",
-            "image",
-            "pdf"
+            "image"
           ],
           "output": [
             "text"
@@ -295,42 +295,9 @@
           "output": 0
         },
         "limit": {
-          "context": 1050000,
-          "input": 922000,
+          "context": 400000,
+          "input": 272000,
           "output": 128000
-        }
-      },
-      "duo-chat-haiku-4-5": {
-        "id": "duo-chat-haiku-4-5",
-        "name": "Agentic Chat (Claude Haiku 4.5)",
-        "family": "claude-haiku",
-        "attachment": true,
-        "reasoning": true,
-        "tool_call": true,
-        "temperature": true,
-        "knowledge": "2025-02-28",
-        "release_date": "2026-01-08",
-        "last_updated": "2026-01-08",
-        "modalities": {
-          "input": [
-            "text",
-            "image",
-            "pdf"
-          ],
-          "output": [
-            "text"
-          ]
-        },
-        "open_weights": false,
-        "cost": {
-          "input": 0,
-          "output": 0,
-          "cache_read": 0,
-          "cache_write": 0
-        },
-        "limit": {
-          "context": 200000,
-          "output": 64000
         }
       },
       "duo-chat-gpt-5-3-codex": {
@@ -366,10 +333,10 @@
           "output": 128000
         }
       },
-      "duo-chat-gpt-5-4-mini": {
-        "id": "duo-chat-gpt-5-4-mini",
-        "name": "Agentic Chat (GPT-5.4 Mini)",
-        "family": "gpt-mini",
+      "duo-chat-gpt-5-4-nano": {
+        "id": "duo-chat-gpt-5-4-nano",
+        "name": "Agentic Chat (GPT-5.4 Nano)",
+        "family": "gpt-nano",
         "attachment": true,
         "reasoning": true,
         "tool_call": true,
@@ -396,6 +363,72 @@
           "context": 400000,
           "input": 272000,
           "output": 128000
+        }
+      },
+      "duo-chat-gpt-5-4": {
+        "id": "duo-chat-gpt-5-4",
+        "name": "Agentic Chat (GPT-5.4)",
+        "family": "gpt",
+        "attachment": true,
+        "reasoning": true,
+        "tool_call": true,
+        "structured_output": true,
+        "temperature": false,
+        "knowledge": "2025-08-31",
+        "release_date": "2026-03-05",
+        "last_updated": "2026-03-05",
+        "modalities": {
+          "input": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "output": [
+            "text"
+          ]
+        },
+        "open_weights": false,
+        "cost": {
+          "input": 0,
+          "output": 0
+        },
+        "limit": {
+          "context": 1050000,
+          "input": 922000,
+          "output": 128000
+        }
+      },
+      "duo-chat-sonnet-4-5": {
+        "id": "duo-chat-sonnet-4-5",
+        "name": "Agentic Chat (Claude Sonnet 4.5)",
+        "family": "claude-sonnet",
+        "attachment": true,
+        "reasoning": true,
+        "tool_call": true,
+        "temperature": true,
+        "knowledge": "2025-07-31",
+        "release_date": "2026-01-08",
+        "last_updated": "2026-01-08",
+        "modalities": {
+          "input": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "output": [
+            "text"
+          ]
+        },
+        "open_weights": false,
+        "cost": {
+          "input": 0,
+          "output": 0,
+          "cache_read": 0,
+          "cache_write": 0
+        },
+        "limit": {
+          "context": 200000,
+          "output": 64000
         }
       },
       "duo-chat-opus-4-5": {
@@ -428,39 +461,6 @@
         },
         "limit": {
           "context": 200000,
-          "output": 64000
-        }
-      },
-      "duo-chat-opus-4-6": {
-        "id": "duo-chat-opus-4-6",
-        "name": "Agentic Chat (Claude Opus 4.6)",
-        "family": "claude-opus",
-        "attachment": true,
-        "reasoning": true,
-        "tool_call": true,
-        "temperature": true,
-        "knowledge": "2025-03-31",
-        "release_date": "2026-02-05",
-        "last_updated": "2026-02-05",
-        "modalities": {
-          "input": [
-            "text",
-            "image",
-            "pdf"
-          ],
-          "output": [
-            "text"
-          ]
-        },
-        "open_weights": false,
-        "cost": {
-          "input": 0,
-          "output": 0,
-          "cache_read": 0,
-          "cache_write": 0
-        },
-        "limit": {
-          "context": 1000000,
           "output": 64000
         }
       }
