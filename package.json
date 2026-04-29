@@ -13,7 +13,7 @@
     "prepare": "bun run generate:models"
   },
   "dependencies": {
-    "opencode-ai": "1.14.28"
+    "opencode-ai": "1.14.29"
   },
   "devDependencies": {
     "@types/bun": "1.3.11"
