@@ -30,14 +30,14 @@
           ]
         },
         "open_weights": false,
-        "cost": {
-          "input": 0,
-          "output": 0
-        },
         "limit": {
           "context": 400000,
           "input": 272000,
           "output": 128000
+        },
+        "cost": {
+          "input": 0,
+          "output": 0
         }
       },
       "duo-chat-gpt-5-mini": {
@@ -62,14 +62,14 @@
           ]
         },
         "open_weights": false,
-        "cost": {
-          "input": 0,
-          "output": 0
-        },
         "limit": {
           "context": 400000,
           "input": 272000,
           "output": 128000
+        },
+        "cost": {
+          "input": 0,
+          "output": 0
         }
       },
       "duo-chat-sonnet-4-6": {
@@ -94,15 +94,15 @@
           ]
         },
         "open_weights": false,
+        "limit": {
+          "context": 1000000,
+          "output": 64000
+        },
         "cost": {
           "input": 0,
           "output": 0,
           "cache_read": 0,
           "cache_write": 0
-        },
-        "limit": {
-          "context": 1000000,
-          "output": 64000
         }
       },
       "duo-chat-gpt-5-2": {
@@ -127,14 +127,14 @@
           ]
         },
         "open_weights": false,
-        "cost": {
-          "input": 0,
-          "output": 0
-        },
         "limit": {
           "context": 400000,
           "input": 272000,
           "output": 128000
+        },
+        "cost": {
+          "input": 0,
+          "output": 0
         }
       },
       "duo-chat-gpt-5-codex": {
@@ -159,14 +159,14 @@
           ]
         },
         "open_weights": false,
-        "cost": {
-          "input": 0,
-          "output": 0
-        },
         "limit": {
           "context": 400000,
           "input": 272000,
           "output": 128000
+        },
+        "cost": {
+          "input": 0,
+          "output": 0
         }
       },
       "duo-chat-gpt-5-1": {
@@ -191,14 +191,14 @@
           ]
         },
         "open_weights": false,
-        "cost": {
-          "input": 0,
-          "output": 0
-        },
         "limit": {
           "context": 400000,
           "input": 272000,
           "output": 128000
+        },
+        "cost": {
+          "input": 0,
+          "output": 0
         }
       },
       "duo-chat-gpt-5-2-codex": {
@@ -224,14 +224,14 @@
           ]
         },
         "open_weights": false,
-        "cost": {
-          "input": 0,
-          "output": 0
-        },
         "limit": {
           "context": 400000,
           "input": 272000,
           "output": 128000
+        },
+        "cost": {
+          "input": 0,
+          "output": 0
         }
       },
       "duo-chat-sonnet-4-5": {
@@ -256,15 +256,15 @@
           ]
         },
         "open_weights": false,
+        "limit": {
+          "context": 200000,
+          "output": 64000
+        },
         "cost": {
           "input": 0,
           "output": 0,
           "cache_read": 0,
           "cache_write": 0
-        },
-        "limit": {
-          "context": 200000,
-          "output": 64000
         }
       },
       "duo-chat-gpt-5-4": {
@@ -290,14 +290,14 @@
           ]
         },
         "open_weights": false,
-        "cost": {
-          "input": 0,
-          "output": 0
-        },
         "limit": {
           "context": 1050000,
           "input": 922000,
           "output": 128000
+        },
+        "cost": {
+          "input": 0,
+          "output": 0
         }
       },
       "duo-chat-haiku-4-5": {
@@ -322,15 +322,15 @@
           ]
         },
         "open_weights": false,
+        "limit": {
+          "context": 200000,
+          "output": 64000
+        },
         "cost": {
           "input": 0,
           "output": 0,
           "cache_read": 0,
           "cache_write": 0
-        },
-        "limit": {
-          "context": 200000,
-          "output": 64000
         }
       },
       "duo-chat-gpt-5-3-codex": {
@@ -356,14 +356,14 @@
           ]
         },
         "open_weights": false,
-        "cost": {
-          "input": 0,
-          "output": 0
-        },
         "limit": {
           "context": 400000,
           "input": 272000,
           "output": 128000
+        },
+        "cost": {
+          "input": 0,
+          "output": 0
         }
       },
       "duo-chat-gpt-5-4-mini": {
@@ -388,14 +388,14 @@
           ]
         },
         "open_weights": false,
-        "cost": {
-          "input": 0,
-          "output": 0
-        },
         "limit": {
           "context": 400000,
           "input": 272000,
           "output": 128000
+        },
+        "cost": {
+          "input": 0,
+          "output": 0
         }
       },
       "duo-chat-opus-4-7": {
@@ -420,15 +420,15 @@
           ]
         },
         "open_weights": false,
+        "limit": {
+          "context": 1000000,
+          "output": 64000
+        },
         "cost": {
           "input": 0,
           "output": 0,
           "cache_read": 0,
           "cache_write": 0
-        },
-        "limit": {
-          "context": 1000000,
-          "output": 64000
         }
       },
       "duo-chat-opus-4-5": {
@@ -453,15 +453,15 @@
           ]
         },
         "open_weights": false,
+        "limit": {
+          "context": 200000,
+          "output": 64000
+        },
         "cost": {
           "input": 0,
           "output": 0,
           "cache_read": 0,
           "cache_write": 0
-        },
-        "limit": {
-          "context": 200000,
-          "output": 64000
         }
       },
       "duo-chat-opus-4-6": {
@@ -486,15 +486,15 @@
           ]
         },
         "open_weights": false,
+        "limit": {
+          "context": 1000000,
+          "output": 64000
+        },
         "cost": {
           "input": 0,
           "output": 0,
           "cache_read": 0,
           "cache_write": 0
-        },
-        "limit": {
-          "context": 1000000,
-          "output": 64000
         }
       }
     }
