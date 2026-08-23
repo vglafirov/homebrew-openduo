@@ -2,8 +2,8 @@ class Openduo < Formula
   desc "GitLab-hardened wrapper for OpenCode"
   homepage "https://gitlab.com/vglafirov/openduo"
   # URL and SHA256 are updated automatically by script/release.sh
-  url "https://gitlab.com/vglafirov/openduo/-/archive/v1.18.19/openduo-v1.18.19.tar.gz"
-  sha256 "e717e6174550b8cef6542cab12f745f3c352382dee9346d89e2535ae69f3d58b"
+  url "https://gitlab.com/vglafirov/openduo/-/archive/v1.18.21/openduo-v1.18.21.tar.gz"
+  sha256 "b3ba36ac761c13836dab712d9979c7b8b1afe2a76df514deab21a09c799e3a85"
   license "MIT"
 
   depends_on "node"
