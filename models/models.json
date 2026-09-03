@@ -147,6 +147,52 @@
           "cache_write": 0
         }
       },
+      "duo-chat-fable-5-1": {
+        "id": "duo-chat-fable-5-1",
+        "name": "Agentic Chat (Claude Fable 5.1)",
+        "description": "Claude model for demanding reasoning and long-horizon agentic work",
+        "family": "claude-fable",
+        "attachment": true,
+        "reasoning": true,
+        "reasoning_options": [
+          {
+            "type": "effort",
+            "values": [
+              "low",
+              "medium",
+              "high",
+              "xhigh",
+              "max"
+            ]
+          }
+        ],
+        "tool_call": true,
+        "temperature": false,
+        "knowledge": "2026-06",
+        "release_date": "2026-09-01",
+        "last_updated": "2026-09-01",
+        "modalities": {
+          "input": [
+            "text",
+            "image",
+            "pdf"
+          ],
+          "output": [
+            "text"
+          ]
+        },
+        "open_weights": false,
+        "limit": {
+          "context": 1000000,
+          "output": 128000
+        },
+        "cost": {
+          "input": 0,
+          "output": 0,
+          "cache_read": 0,
+          "cache_write": 0
+        }
+      },
       "duo-chat-gpt-5-4-mini": {
         "id": "duo-chat-gpt-5-4-mini",
         "name": "Agentic Chat (GPT-5.4 Mini)",
