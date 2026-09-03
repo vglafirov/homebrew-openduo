@@ -4,7 +4,7 @@
 # This script:
 #   1. Reads the opencode-ai version from package.json
 #   2. Syncs package.json "version" field to match
-#   3. Regenerates the restricted models catalog
+#   3. Refreshes bun.lock and regenerates the restricted models catalog
 #   4. Commits and creates a git tag (without formula SHA update)
 #   5. Computes SHA256 from the now-existing tag archive
 #   6. Updates the Homebrew formula with correct URL + SHA
@@ -50,16 +50,19 @@ bun -e "
   await Bun.write('package.json', JSON.stringify(pkg, null, 2) + '\n');
 "
 
-# --- 3. Regenerate models catalog ---
-echo "Regenerating models catalog..."
-bun run generate:models
+# --- 3. Refresh lockfile and regenerate models catalog ---
+# "bun install" resolves the opencode-ai version that step 2 wrote into
+# bun.lock, so the committed lockfile keeps matching package.json. It also
+# regenerates models/models.json via the "prepare" script in package.json.
+echo "Refreshing lockfile and models catalog..."
+bun install
 
 # --- 4. Commit and tag (formula not updated yet — that's intentional) ---
 # Set git identity if not already set (CI sets these in before_script)
 git config user.email 2>/dev/null || git config user.email "ci@gitlab.com"
 git config user.name 2>/dev/null || git config user.name "OpenDuo CI"
 
-git add package.json models/models.json
+git add package.json bun.lock models/models.json
 git commit -m "release: bump to opencode-ai ${OPENCODE_VERSION}"
 git tag -a "$TAG" -m "OpenDuo ${TAG} (opencode-ai ${OPENCODE_VERSION})"
 git push origin main --tags

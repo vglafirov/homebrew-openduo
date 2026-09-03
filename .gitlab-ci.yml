@@ -25,7 +25,9 @@ test:
   stage: test
   image: oven/bun:1
   script:
-    - bun install
+    # --frozen-lockfile fails the job if bun.lock doesn't match package.json,
+    # so the lockfile can't silently drift out of sync again.
+    - bun install --frozen-lockfile
     - bun test
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
