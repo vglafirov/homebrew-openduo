@@ -45,6 +45,28 @@ bun run generate:models
 export PATH="$(pwd)/bin:$PATH"
 ```
 
+#### Using mise (optional)
+
+If you use [mise](https://mise.jdx.dev), `mise.toml` wraps the steps above as
+tasks:
+
+```bash
+mise run update    # git pull, install deps, regenerate models, run tests
+mise run install   # symlink bin/openduo into ~/.local/bin
+mise run info      # show openduo / opencode-ai versions and paths
+mise tasks         # list all available tasks
+```
+
+`mise.toml` also pins `bun`, which `bin/openduo` needs at runtime — not just to
+build — for the models catalog fetch and the config merge.
+
+Set `OPENDUO_PREFIX` to install the symlink somewhere other than
+`~/.local/bin`:
+
+```bash
+OPENDUO_PREFIX=~/bin mise run install
+```
+
 ## Usage
 
 ```bash
@@ -105,6 +127,7 @@ openduo/
 ├── script/generate-models.ts # Script to regenerate local gitlab models from models.dev
 ├── test/security.test.ts    # Security hardening tests
 ├── renovate.json            # Renovate config for auto-updates
+├── mise.toml                # Optional mise tasks for building from source
 └── package.json             # opencode-ai as dependency
 ```
 
