@@ -25,9 +25,13 @@ test:
   stage: test
   image: oven/bun:1
   script:
-    # --frozen-lockfile fails the job if bun.lock doesn't match package.json,
-    # so the lockfile can't silently drift out of sync again.
-    - bun install --frozen-lockfile
+    # Deliberately not --frozen-lockfile: Renovate's bump MRs touch only
+    # package.json, because it cannot refresh bun.lock (it resolves which bun
+    # to install from the oven-sh/bun GitHub releases API, which is rate
+    # limited without a token). A frozen check would therefore fail every
+    # Renovate MR and block automerge. script/release.sh is what keeps the
+    # lockfile in sync, on main after the merge.
+    - bun install
     - bun test
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
