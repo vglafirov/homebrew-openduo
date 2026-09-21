@@ -1,6 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
+  "constraints": {
+    "bun": "1.4.2"
+  },
   "packageRules": [
     {
       "matchPackageNames": ["opencode-ai"],
