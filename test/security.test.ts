@@ -230,7 +230,7 @@ describe("openduo security hardening", () => {
     const config = JSON.parse(result.trim());
 
     expect(config.share).toBe("disabled");
-    expect(config.small_model).toBe("gitlab/duo-chat-haiku-4-5");
+    expect(config.small_model).toBe("gitlab/duo-chat-gpt-5-4-nano");
     expect(config.enabled_providers).toEqual(["gitlab", "anthropic", "google"]);
     expect(config.server.hostname).toBe("127.0.0.1");
     expect(config.permission).toBeDefined();
@@ -305,5 +305,40 @@ describe("openduo security hardening", () => {
     // Security still wins
     expect(config.share).toBe("disabled");
     expect(config.enabled_providers).toEqual(["gitlab", "anthropic", "google"]);
+  });
+});
+
+// Formula/openduo.rb cannot install bin/openduo directly: the wrapper shells
+// out to bun, while the formula only depends on node, so it carries a node
+// port of the same script. That duplication has silently diverged twice --
+// small_model in eec2e3e and external_directory in !100 -- because every
+// other test builds its own fixture strings instead of reading the real
+// files. These tests compare the two embedded configs directly, so any
+// future edit to one that is not mirrored in the other fails CI.
+describe("Formula and wrapper config parity", () => {
+  const FORMULA = path.join(ROOT, "Formula", "openduo.rb");
+
+  function extractConfig(filePath: string, name: string): unknown {
+    const contents = fs.readFileSync(filePath, "utf-8");
+    const match = contents.match(new RegExp(`${name}='([\\s\\S]*?)'`, "m"));
+    if (!match) throw new Error(`${name} not found in ${filePath}`);
+    return JSON.parse(match[1]);
+  }
+
+  for (const name of ["GOLDEN_CONFIG", "SECURITY_CONFIG"]) {
+    test(`${name} is identical in bin/openduo and Formula/openduo.rb`, () => {
+      expect(extractConfig(FORMULA, name)).toEqual(extractConfig(WRAPPER, name));
+    });
+  }
+
+  test("the enforced small model is the same in both, and exists in the catalog", () => {
+    const security = extractConfig(WRAPPER, "SECURITY_CONFIG") as {
+      small_model: string;
+    };
+    const [provider, model] = security.small_model.split("/");
+    const catalog = JSON.parse(fs.readFileSync(MODELS_PATH, "utf-8"));
+
+    expect(provider).toBe("gitlab");
+    expect(Object.keys(catalog.gitlab.models)).toContain(model);
   });
 });
