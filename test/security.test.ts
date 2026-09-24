@@ -230,7 +230,7 @@ describe("openduo security hardening", () => {
     const config = JSON.parse(result.trim());
 
     expect(config.share).toBe("disabled");
-    expect(config.small_model).toBe("gitlab/duo-chat-haiku-4-5");
+    expect(config.small_model).toBe("gitlab/duo-chat-gpt-5-4-nano");
     expect(config.enabled_providers).toEqual(["gitlab", "anthropic", "google"]);
     expect(config.server.hostname).toBe("127.0.0.1");
     expect(config.permission).toBeDefined();
