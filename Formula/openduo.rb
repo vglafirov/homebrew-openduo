@@ -139,7 +139,7 @@ class Openduo < Formula
           "edit": "ask",
           "webfetch": "ask",
           "websearch": "ask",
-          "external_directory": "ask",
+          "external_directory": { "*": "ask" },
           "doom_loop": "ask",
           "~/.aws/*": "deny",
           "~/.config/opencode/*": "deny",
