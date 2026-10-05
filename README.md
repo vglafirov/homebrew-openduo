@@ -92,6 +92,19 @@ OpenDuo is a thin shell wrapper (`bin/openduo`) that:
 
 OpenCode is a regular npm dependency (`opencode-ai` on npm) — Renovate automatically creates MRs when new versions are published.
 
+### Which model catalog we poll
+
+OpenDuo polls `models.dev`, while OpenCode itself polls `models.opencode.ai`. The second is a mirror of the first and lags behind it, so the two can disagree about which models exist and how a provider is wired up.
+
+This matters because step 1 above takes provider-level fields — including `npm`, the package OpenCode loads, and `env`, the secret it reads — from the remote catalog. The local `models/models.json` only overrides the `models` map, so those two fields come off the network unpinned at every startup, unlike `opencode-ai` itself which is pinned and hash-verified in `bun.lock`.
+
+`script/check-models-drift.ts` watches for this. It runs from the daily scheduled pipeline (not on merge requests — it needs the network) and fails only when something actually changes what users get:
+
+- a provider's `id`, `npm`, `env` or `api` differs between the two feeds, or from the copy committed in `models/models.json`
+- a model exists in `models.opencode.ai` but not in `models.dev`, meaning OpenDuo's feed is behind and its users cannot reach a model plain OpenCode offers
+
+Mirror lag in the other direction, metadata differences, and an unreachable feed are reported as warnings only.
+
 ## Updating OpenCode
 
 OpenCode updates are managed automatically by Renovate. When a new version is published:
