@@ -38,6 +38,27 @@ test:
     - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_COMMIT_TAG
 
+# --- Models feed drift: compare models.dev with models.opencode.ai ---
+# openduo polls models.dev; opencode itself polls models.opencode.ai. The two
+# are maintained separately, so this watches for the point where they stop
+# agreeing about the providers openduo allows. It also checks that the live
+# feed's provider-level "npm" and "env" still match the copy committed in
+# models/models.json, since bin/openduo takes those off the network unpinned
+# at every startup.
+#
+# Schedule only, on purpose. It makes two ~5MB requests, and putting a network
+# dependency in front of every merge request and every release is the kind of
+# fragility that stalled releases for three weeks in !102/!104. The daily
+# schedule already exists for the renovate job, so this costs no extra cadence.
+models-drift:
+  stage: test
+  image: oven/bun:1
+  script:
+    - bun install
+    - bun run script/check-models-drift.ts
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+
 # --- Renovate: check for dependency updates (runs on schedule) ---
 renovate:
   stage: renovate
